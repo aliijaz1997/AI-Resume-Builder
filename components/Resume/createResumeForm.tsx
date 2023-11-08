@@ -4,6 +4,9 @@ import { Education, WorkExperience } from "../../utils/types/resume";
 import Input from "../UIComponents/input";
 import TextArea from "../UIComponents/textArea";
 import AccordionItem from "../UIComponents/accordianItem";
+import "flowbite-datepicker";
+import "flowbite/dist/datepicker.turbo.js";
+import { Alert } from "flowbite-react";
 
 const CreateResumeForm = () => {
   const [name, setName] = useState("");
@@ -71,13 +74,23 @@ const CreateResumeForm = () => {
       achievements,
     });
   };
-
+  console.log({
+    name,
+    email,
+    phone,
+    location,
+    education,
+    workExperience,
+    skills,
+    achievements,
+  });
   return (
     <div
-      className=" w-1/2 p-7 "
+      className=" lg:w-1/2 p-7 "
       id="accordion-collapse"
       data-accordion="collapse"
     >
+      <Alert color="info">Alert!</Alert>
       <form onSubmit={handleSubmit} className="bg-white rounded-xl">
         <AccordionItem
           index={0}
@@ -178,7 +191,7 @@ const CreateResumeForm = () => {
 
                   <input
                     name="start"
-                    type="text"
+                    type="date"
                     value={item.startDate}
                     onChange={(e) =>
                       setEducation(
@@ -208,7 +221,7 @@ const CreateResumeForm = () => {
                   </div>
                   <input
                     name="end"
-                    type="text"
+                    type="date"
                     value={item.endDate}
                     onChange={(e) =>
                       setEducation(
@@ -224,6 +237,7 @@ const CreateResumeForm = () => {
                   />
                 </div>
               </div>
+
               <button
                 onClick={() => handleRemoveEducation(index)}
                 type="button"
@@ -309,7 +323,7 @@ const CreateResumeForm = () => {
                   </div>
                   <input
                     name="start"
-                    type="text"
+                    type="date"
                     value={item.startDate}
                     onChange={(e) =>
                       setWorkExperience(
@@ -339,7 +353,7 @@ const CreateResumeForm = () => {
                   </div>
                   <input
                     name="end"
-                    type="text"
+                    type="date"
                     value={item.endDate}
                     onChange={(e) =>
                       setWorkExperience(
