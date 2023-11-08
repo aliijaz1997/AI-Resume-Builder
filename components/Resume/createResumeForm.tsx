@@ -175,6 +175,7 @@ const CreateResumeForm = () => {
                       <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                     </svg>
                   </div>
+
                   <input
                     name="start"
                     type="text"
@@ -407,13 +408,14 @@ const CreateResumeForm = () => {
           title="Skills"
         >
           {skills.map((item, index) => (
-            <div key={index} className="space-y-2">
+            <div
+              key={index}
+              className="space-y-2 flex text-center justify-between"
+            >
               <div className="form-group">
-                <label className="block" htmlFor={`skill-${index}`}>
-                  Skill
-                </label>
-                <input
+                <Input
                   id={`skill-${index}`}
+                  labelText="Skill"
                   type="text"
                   value={item}
                   onChange={(e) =>
@@ -423,14 +425,12 @@ const CreateResumeForm = () => {
                       )
                     )
                   }
-                  className="form-input"
-                  required
                 />
               </div>
               <button
                 onClick={() => handleRemoveSkill(index)}
                 type="button"
-                className="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                className="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-xs px-5 py-2.5 text-center mr-2 mb-2"
               >
                 <svg
                   className="w-4 h-4 text-white"
@@ -472,11 +472,9 @@ const CreateResumeForm = () => {
           {achievements.map((item, index) => (
             <div key={index} className="space-y-2">
               <div className="form-group">
-                <label className="block" htmlFor={`achievement-${index}`}>
-                  Achievement
-                </label>
-                <input
+                <Input
                   id={`achievement-${index}`}
+                  labelText="Achievement"
                   type="text"
                   value={item}
                   onChange={(e) => {
@@ -486,8 +484,6 @@ const CreateResumeForm = () => {
                       )
                     );
                   }}
-                  className="form-input"
-                  required={true}
                 />
               </div>
               <button
