@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import ReactPDF, {
+import {
   Text,
   Font,
   Page,
@@ -8,8 +8,7 @@ import ReactPDF, {
   StyleSheet,
   Link,
 } from "@react-pdf/renderer";
-import { experienceData } from "../DummyData/experienceData";
-import { skills } from "../DummyData/skillsData";
+import { FormValues } from "../../../utils/types/formValues";
 
 const styles = StyleSheet.create({
   page: {
@@ -131,7 +130,7 @@ const styles = StyleSheet.create({
     fontFamily: "Lato Bold",
   },
   headerContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     borderBottomWidth: 2,
     borderBottomColor: "#112131",
     borderBottomStyle: "solid",
@@ -206,20 +205,20 @@ const SkillEntry = ({ skills }: { skills: string[] }) => (
   </View>
 );
 
-const Modern = (
-  props: React.JSX.IntrinsicAttributes &
-    React.JSX.IntrinsicClassAttributes<ReactPDF.Page> &
-    Readonly<React.PropsWithChildren<ReactPDF.PageProps>>
-) => (
-  <Page {...props} style={styles.page}>
+interface ModernProps {
+  values: FormValues;
+}
+
+const Modern = ({ values }: ModernProps) => (
+  <Page size="A4" style={styles.page}>
     <View style={styles.headerContainer}>
       <View style={styles.detailColumn}>
-        <Text style={styles.name}>Luke Skywalker</Text>
-        <Text style={styles.subtitle}>Jedi Master</Text>
+        <Text style={styles.name}>{values?.name || "Your Name"}</Text>
+        <Text style={styles.subtitle}>{values?.title || "Your Title"}</Text>
       </View>
       <View style={styles.linkColumn}>
-        <Link src="mailto:luke@theforce.com" style={styles.link}>
-          luke@theforce.com
+        <Link src={`mailto:${values.email}`} style={styles.link}>
+          {values.email || "Your email"}
         </Link>
       </View>
     </View>
@@ -231,35 +230,50 @@ const Modern = (
         />
         <View style={styles.EducationContainer}>
           <Text style={styles.title}>Education</Text>
-          <Text style={styles.school}>Jedi Academy</Text>
-          <Text style={styles.degree}>Jedi Master</Text>
-          <Text style={styles.candidate}>A long, long time ago</Text>
+          {values.education.map((item) => (
+            <>
+              <Text style={styles.school}>{item.school}</Text>
+              <Text style={styles.degree}>{item.degree}</Text>
+              <Text style={styles.candidate}>
+                {item.startDate}-{item.endDate}
+              </Text>
+            </>
+          ))}
         </View>
         <View>
           <Text style={styles.title}>Skills</Text>
-          <SkillEntry skills={skills} />
+          <SkillEntry skills={values.skills} />
         </View>
       </View>
       <View style={styles.rightColumn}>
         <View style={styles.experienceContainer}>
           <Text style={styles.title}>Experience</Text>
-          {experienceData.map(({ company, date, details, position }) => (
-            <View style={styles.entryContainer}>
-              <View style={styles.headerContainer}>
-                <View style={styles.expLeftColumn}>
-                  <Text style={styles.expTitle}>{company}</Text>
+          {values.workExperience.map(
+            ({ company, description, endDate, startDate, title }) => (
+              <View style={styles.entryContainer}>
+                <View style={styles.headerContainer}>
+                  <View style={styles.expLeftColumn}>
+                    <Text style={styles.expTitle}>
+                      {title},{company}
+                    </Text>
+                  </View>
+                  <View style={styles.expRightColumn}>
+                    <Text style={styles.date}>
+                      {startDate}-{endDate}
+                    </Text>
+                  </View>
                 </View>
-                <View style={styles.expRightColumn}>
-                  <Text style={styles.date}>{date}</Text>
-                </View>
+                <List>
+                  {description
+                    .split("- ")
+                    .filter((item, index) => index !== 0 && item.trim() !== "")
+                    .map((item, index) => {
+                      return <Item key={index}>{item}</Item>;
+                    })}
+                </List>
               </View>
-              <List>
-                {details.map((detail, i) => (
-                  <Item key={i}>{detail}</Item>
-                ))}
-              </List>
-            </View>
-          ))}
+            )
+          )}
         </View>
       </View>
     </View>

@@ -8,13 +8,6 @@ export async function POST(req: Request) {
 
     const apiKey = process.env.OPENAI_API_KEY;
     if (apiKey) {
-      console.log(
-        jobTitle,
-        description,
-        generateNew,
-        apiKey,
-        "Request body received"
-      );
       let content = "";
 
       if (generateNew) {
@@ -29,7 +22,6 @@ export async function POST(req: Request) {
         messages: [{ role: "user", content }],
         model: "gpt-3.5-turbo",
       });
-      console.log(chatCompletion);
       return NextResponse.json(
         { response: chatCompletion.choices[0].message.content },
         { status: 201 }

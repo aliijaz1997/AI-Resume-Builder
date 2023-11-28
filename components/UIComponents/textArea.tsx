@@ -2,6 +2,7 @@
 import React, { ChangeEvent, useState } from "react";
 import { WorkExperience } from "../../utils/types/resume";
 import Loader from "../Loader/loader";
+import { FormikErrors } from "formik";
 
 interface TextAreaProps {
   index: number;
@@ -10,7 +11,12 @@ interface TextAreaProps {
   labelText: string;
   jobTitle: string;
   workExperience: WorkExperience[];
-  setWorkExperience: React.Dispatch<React.SetStateAction<WorkExperience[]>>;
+  setFieldValue: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean | undefined
+  ) => Promise<void> | Promise<FormikErrors<any>>;
+  handleChange: (e: React.ChangeEvent<any>) => void;
 }
 export default function TextArea({
   index,
@@ -19,7 +25,8 @@ export default function TextArea({
   labelText,
   jobTitle,
   workExperience,
-  setWorkExperience,
+  setFieldValue,
+  handleChange,
 }: TextAreaProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +48,8 @@ export default function TextArea({
 
       if (response.ok) {
         const { response: description } = await response.json();
-        setWorkExperience(
+        setFieldValue(
+          "workExperience",
           workExperience.map((exp, i) =>
             i === index ? { ...exp, description } : exp
           )
@@ -65,18 +73,12 @@ export default function TextArea({
           {labelText}
         </label>
         <textarea
-          id={`${index}`}
+          id={`workExperience[${index}].description`}
           rows={4}
           className="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
           placeholder={placeholder}
           value={value}
-          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-            setWorkExperience(
-              workExperience.map((exp, i) =>
-                i === index ? { ...exp, description: e.target.value } : exp
-              )
-            );
-          }}
+          onChange={handleChange}
         ></textarea>
       </div>
       <button

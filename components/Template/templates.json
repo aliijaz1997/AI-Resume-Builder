@@ -1,15 +1,17 @@
 [
-    {
-      "name": "Simple",
-    "image": "XYZ.jpg"
-    },
-    {
-      "name": "Modern",
-    "image": "XYZ.jpg"
-    },
-    {
-      "name": "Classic",
-    "image": "XYZ.jpg"
-    }
-  ]
-  
+  {
+    "name": "Simple",
+    "image": "/Resume1.png",
+    "variant": "basic"
+  },
+  {
+    "name": "Modern",
+    "image": "/Resume2.png",
+    "variant": "premium"
+  },
+  {
+    "name": "Classic",
+    "image": "/Resume3.png",
+    "variant": "basic"
+  }
+]

@@ -29,7 +29,7 @@ export default function Intro() {
               <div className="flex justify-start">
                 {status === "authenticated" && (
                   <Link
-                    href="/resume"
+                    href="/templates"
                     className=" cursor-pointer inline-flex items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-black hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
                   >
                     Create My Resume

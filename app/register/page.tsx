@@ -66,7 +66,6 @@ export default function Register() {
     backgroundPosition: "center",
   };
 
-  console.log(formData);
   return (
     <section>
       {isLoading && <Loader />}

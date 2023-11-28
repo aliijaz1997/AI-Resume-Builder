@@ -1,96 +1,97 @@
 "use client";
 import React, { useState } from "react";
-import { Education, WorkExperience } from "../../utils/types/resume";
 import Input from "../UIComponents/input";
 import TextArea from "../UIComponents/textArea";
 import AccordionItem from "../UIComponents/accordianItem";
 import "flowbite-datepicker";
 import "flowbite/dist/datepicker.turbo.js";
-import { Alert } from "flowbite-react";
+import { FormikErrors, FormikTouched } from "formik";
+import { FormValues } from "../../utils/types/formValues";
 
-const CreateResumeForm = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [location, setLocation] = useState("");
-  const [education, setEducation] = useState<Education[]>([]);
-  const [workExperience, setWorkExperience] = useState<WorkExperience[]>([]);
-  const [skills, setSkills] = useState<string[]>([]);
-  const [achievements, setAchievements] = useState<string[]>([]);
+interface CreateResumeFormProps {
+  values: FormValues;
+  touched: FormikTouched<FormValues>;
+  errors: FormikErrors<FormValues>;
+  setFieldValue: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean | undefined
+  ) => Promise<void> | Promise<FormikErrors<FormValues>>;
+  handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
+  handleChange: (e: React.ChangeEvent<any>) => void;
+}
+const CreateResumeForm = ({
+  values,
+  errors,
+  touched,
+  setFieldValue,
+  handleSubmit,
+  handleChange,
+}: CreateResumeFormProps) => {
   const [activeAccordion, setActiveAccordion] = useState<number | null>(null);
 
   const handleAddEducation = () => {
-    setEducation([
-      ...education,
+    setFieldValue("education", [
+      ...values.education,
       { school: "", degree: "", startDate: "", endDate: "" },
     ]);
   };
 
   const handleRemoveEducation = (index: number) => {
-    setEducation(education.filter((_, i) => i !== index));
+    const updatedEducation = [...values.education];
+    updatedEducation.splice(index, 1);
+    setFieldValue("education", updatedEducation);
   };
 
   const handleAddWorkExperience = () => {
-    setWorkExperience([
-      ...workExperience,
-      { company: "", title: "", startDate: "", endDate: "", description: "" },
+    setFieldValue("workExperience", [
+      ...values.workExperience,
+      {
+        company: "",
+        title: "",
+        startDate: "",
+        endDate: "",
+        description: "",
+      },
     ]);
   };
 
   const handleRemoveWorkExperience = (index: number) => {
-    setWorkExperience(workExperience.filter((_, i) => i !== index));
+    const updatedExperience = [...values.workExperience];
+    updatedExperience.splice(index, 1);
+    setFieldValue("workExperience", updatedExperience);
   };
 
   const handleAddSkill = () => {
-    setSkills([...skills, ""]);
+    setFieldValue("skills", [...values.skills, ""]);
   };
 
   const handleRemoveSkill = (index: number) => {
-    setSkills(skills.filter((_, i) => i !== index));
+    const updatedSkills = [...values.skills];
+    updatedSkills.splice(index, 1);
+    setFieldValue("skills", updatedSkills);
   };
 
   const handleAddAchievement = () => {
-    setAchievements([...achievements, ""]);
+    setFieldValue("achievements", [...values.achievements, ""]);
   };
 
   const handleRemoveAchievement = (index: number) => {
-    setAchievements(achievements.filter((_, i) => i !== index));
+    const updatedAchievements = [...values.achievements];
+    updatedAchievements.splice(index, 1);
+    setFieldValue("achievements", updatedAchievements);
   };
 
   const toggleAccordion = (index: number) => {
     setActiveAccordion((prevIndex) => (prevIndex === index ? null : index));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log({
-      name,
-      email,
-      phone,
-      location,
-      education,
-      workExperience,
-      skills,
-      achievements,
-    });
-  };
-  console.log({
-    name,
-    email,
-    phone,
-    location,
-    education,
-    workExperience,
-    skills,
-    achievements,
-  });
   return (
     <div
       className=" lg:w-1/2 p-7 "
       id="accordion-collapse"
       data-accordion="collapse"
     >
-      <Alert color="info">Alert!</Alert>
       <form onSubmit={handleSubmit} className="bg-white rounded-xl">
         <AccordionItem
           index={0}
@@ -101,43 +102,64 @@ const CreateResumeForm = () => {
           <Input
             id="name"
             labelText="Name"
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
+            onChange={handleChange}
             placeHolder="Enter your name"
             type="text"
-            value={name}
+            value={values.name}
           />
+          {touched.name && errors.name && (
+            <div className="text-red-600 text-xs -mt-6 mb-6">{errors.name}</div>
+          )}
+          <Input
+            id="title"
+            labelText="Title"
+            onChange={handleChange}
+            placeHolder="Enter your title"
+            type="text"
+            value={values.title}
+          />
+          {touched.title && errors.title && (
+            <div className="text-red-600 text-xs -mt-6 mb-6">{errors.name}</div>
+          )}
           <Input
             id="email"
             labelText="Email"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={handleChange}
             placeHolder="e.g xyz@company.com"
             type="email"
-            value={email}
+            value={values.email}
           />
+          {touched.email && errors.email && (
+            <div className="text-red-600 text-xs -mt-6 mb-6">
+              {errors.email}
+            </div>
+          )}
           <Input
             id="phone"
             labelText="Phone Number"
-            onChange={(e) => {
-              setPhone(e.target.value);
-            }}
+            onChange={handleChange}
             placeHolder="e.g +92XXXXXXXXXX"
             type="tel"
-            value={phone}
+            value={values.phone}
           />
+          {touched.phone && errors.phone && (
+            <div className="text-red-600 text-xs -mt-6 mb-6">
+              {errors.phone}
+            </div>
+          )}
           <Input
-            id="Address"
+            id="address"
             labelText="Address"
-            onChange={(e) => {
-              setLocation(e.target.value);
-            }}
+            onChange={handleChange}
             placeHolder="e.g Islamabad, Pakistan"
             type="text"
-            value={location}
+            value={values.address}
           />
+          {touched.address && errors.address && (
+            <div className="text-red-600 text-xs -mt-6 mb-6">
+              {errors.address}
+            </div>
+          )}
         </AccordionItem>
         <AccordionItem
           index={1}
@@ -145,121 +167,101 @@ const CreateResumeForm = () => {
           toggleAccordion={toggleAccordion}
           title="Education"
         >
-          {education.map((item, index) => (
+          {values.education.map((item, index) => (
             <div key={index} className="space-y-2">
               <Input
-                id={`school-${index}`}
+                id={`education[${index}].school`}
                 labelText="School"
                 placeHolder="Enter the name of the school"
                 type="text"
                 value={item.school}
-                onChange={(e) =>
-                  setEducation(
-                    education.map((edu, i) =>
-                      i === index ? { ...edu, school: e.target.value } : edu
-                    )
-                  )
-                }
+                onChange={handleChange}
               />
+              {touched.education &&
+                errors.education &&
+                errors.education[index] && (
+                  <div className="text-red-600 text-xs -mt-6 mb-6">
+                    {errors.education[index].school}
+                  </div>
+                )}
               <Input
                 labelText="Degree"
                 placeHolder="Enter the degree title"
-                id={`degree-${index}`}
+                id={`education[${index}].degree`}
                 type="text"
                 value={item.degree}
-                onChange={(e) =>
-                  setEducation(
-                    education.map((edu, i) =>
-                      i === index ? { ...edu, degree: e.target.value } : edu
-                    )
-                  )
-                }
+                onChange={handleChange}
               />
+              {touched.education &&
+                errors.education &&
+                errors.education[index] && (
+                  <div className="text-red-600 text-xs -mt-6 mb-6">
+                    {errors.education[index].degree}
+                  </div>
+                )}
               <div date-rangepicker className="flex items-center">
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <svg
-                      className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                    </svg>
-                  </div>
-
                   <input
-                    name="start"
+                    id={`education[${index}].startDate`}
                     type="date"
                     value={item.startDate}
-                    onChange={(e) =>
-                      setEducation(
-                        education.map((edu, i) =>
-                          i === index
-                            ? { ...edu, startDate: e.target.value }
-                            : edu
-                        )
-                      )
-                    }
+                    onChange={handleChange}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Select date start"
                   />
+                  {touched.education &&
+                    errors.education &&
+                    errors.education[index] && (
+                      <div className="text-red-600 text-xs  mb-6">
+                        {errors.education[index].startDate}
+                      </div>
+                    )}
                 </div>
                 <span className="mx-4 text-gray-500">to</span>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <svg
-                      className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                    </svg>
-                  </div>
                   <input
-                    name="end"
+                    id={`education[${index}].endDate`}
                     type="date"
                     value={item.endDate}
-                    onChange={(e) =>
-                      setEducation(
-                        education.map((edu, i) =>
-                          i === index
-                            ? { ...edu, endDate: e.target.value }
-                            : edu
-                        )
-                      )
-                    }
+                    onChange={handleChange}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Select date end"
                   />
+                  {touched.education &&
+                    errors.education &&
+                    errors.education[index] && (
+                      <div className="text-red-600 text-xs mb-6">
+                        {errors.education[index].endDate}
+                      </div>
+                    )}
                 </div>
               </div>
-
-              <button
-                onClick={() => handleRemoveEducation(index)}
-                type="button"
-                className="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-              >
-                <svg
-                  className="w-4 h-4 text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 2"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M1 1h16"
-                  />
-                </svg>
-                <span className="sr-only">Remove</span>
-              </button>
+              {index !== 0 && (
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => handleRemoveEducation(index)}
+                    type="button"
+                    className="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                  >
+                    <svg
+                      className="w-4 h-4 text-white"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 18 2"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M1 1h16"
+                      />
+                    </svg>
+                    <span className="sr-only">Remove</span>
+                  </button>
+                </div>
+              )}
             </div>
           ))}
           <button
@@ -278,95 +280,73 @@ const CreateResumeForm = () => {
           toggleAccordion={toggleAccordion}
           title="Work Experience"
         >
-          {workExperience.map((item, index) => (
+          {values.workExperience.map((item, index) => (
             <div key={index} className="space-y-2">
               <Input
-                id={`company-${index}`}
+                id={`workExperience[${index}].company`}
                 labelText="Company"
                 placeHolder="Enter your company name"
                 type="text"
                 value={item.company}
-                onChange={(e) =>
-                  setWorkExperience(
-                    workExperience.map((exp, i) =>
-                      i === index ? { ...exp, company: e.target.value } : exp
-                    )
-                  )
-                }
+                onChange={handleChange}
               />
+              {touched.workExperience &&
+                errors.workExperience &&
+                errors.workExperience[index] && (
+                  <div className="text-red-600 text-xs -mt-6 mb-6">
+                    {errors.workExperience[index].company}
+                  </div>
+                )}
               <Input
-                id={`title-${index}`}
+                id={`workExperience[${index}].title`}
                 labelText="Title"
                 placeHolder="Enter title"
                 type="text"
                 value={item.title}
-                onChange={(e) =>
-                  setWorkExperience(
-                    workExperience.map((exp, i) =>
-                      i === index ? { ...exp, title: e.target.value } : exp
-                    )
-                  )
-                }
+                onChange={handleChange}
               />
+              {touched.workExperience &&
+                errors.workExperience &&
+                errors.workExperience[index] && (
+                  <div className="text-red-600 text-xs -mt-6 mb-6">
+                    {errors.workExperience[index].title}
+                  </div>
+                )}
               <div date-rangepicker className="flex items-center">
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <svg
-                      className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                    </svg>
-                  </div>
                   <input
-                    name="start"
+                    id={`workExperience[${index}].startDate`}
                     type="date"
                     value={item.startDate}
-                    onChange={(e) =>
-                      setWorkExperience(
-                        workExperience.map((exp, i) =>
-                          i === index
-                            ? { ...exp, startDate: e.target.value }
-                            : exp
-                        )
-                      )
-                    }
+                    onChange={handleChange}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Select date start"
                   />
+                  {touched.workExperience &&
+                    errors.workExperience &&
+                    errors.workExperience[index] && (
+                      <div className="text-red-600 text-xs  mb-6">
+                        {errors.workExperience[index].startDate}
+                      </div>
+                    )}
                 </div>
                 <span className="mx-4 text-gray-500">to</span>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <svg
-                      className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                    </svg>
-                  </div>
                   <input
-                    name="end"
+                    id={`workExperience[${index}].endDate`}
                     type="date"
                     value={item.endDate}
-                    onChange={(e) =>
-                      setWorkExperience(
-                        workExperience.map((exp, i) =>
-                          i === index
-                            ? { ...exp, endDate: e.target.value }
-                            : exp
-                        )
-                      )
-                    }
+                    onChange={handleChange}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Select date end"
                   />
+                  {touched.workExperience &&
+                    errors.workExperience &&
+                    errors.workExperience[index] && (
+                      <div className="text-red-600 text-xs  mb-6">
+                        {errors.workExperience[index].endDate}
+                      </div>
+                    )}
                 </div>
               </div>
 
@@ -376,31 +356,36 @@ const CreateResumeForm = () => {
                 value={item.description}
                 jobTitle={item.title}
                 placeholder="Write your work experience"
-                workExperience={workExperience}
-                setWorkExperience={setWorkExperience}
+                workExperience={values.workExperience}
+                setFieldValue={setFieldValue}
+                handleChange={handleChange}
               />
-              <button
-                onClick={() => handleRemoveWorkExperience(index)}
-                type="button"
-                className="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-              >
-                <svg
-                  className="w-4 h-4 text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 2"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M1 1h16"
-                  />
-                </svg>
-                <span className="sr-only">Remove</span>
-              </button>
+              {index !== 0 && (
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => handleRemoveWorkExperience(index)}
+                    type="button"
+                    className="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                  >
+                    <svg
+                      className="w-4 h-4 text-white"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 18 2"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M1 1h16"
+                      />
+                    </svg>
+                    <span className="sr-only">Remove</span>
+                  </button>
+                </div>
+              )}
             </div>
           ))}
 
@@ -421,24 +406,18 @@ const CreateResumeForm = () => {
           toggleAccordion={toggleAccordion}
           title="Skills"
         >
-          {skills.map((item, index) => (
+          {values.skills.map((item, index) => (
             <div
               key={index}
               className="space-y-2 flex text-center justify-between"
             >
               <div className="form-group">
                 <Input
-                  id={`skill-${index}`}
+                  id={`skills[${index}]`}
                   labelText="Skill"
                   type="text"
                   value={item}
-                  onChange={(e) =>
-                    setSkills(
-                      skills.map((skill, i) =>
-                        i === index ? e.target.value : skill
-                      )
-                    )
-                  }
+                  onChange={handleChange}
                 />
               </div>
               <button
@@ -483,21 +462,15 @@ const CreateResumeForm = () => {
           toggleAccordion={toggleAccordion}
           title="Achievements"
         >
-          {achievements.map((item, index) => (
+          {values.achievements.map((item, index) => (
             <div key={index} className="space-y-2">
               <div className="form-group">
                 <Input
-                  id={`achievement-${index}`}
+                  id={`achievements[${index}]`}
                   labelText="Achievement"
                   type="text"
                   value={item}
-                  onChange={(e) => {
-                    setAchievements(
-                      achievements.map((ach, i) =>
-                        i === index ? e.target.value : ach
-                      )
-                    );
-                  }}
+                  onChange={handleChange}
                 />
               </div>
               <button
