@@ -1,13 +1,18 @@
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 export default function AppHeader() {
   const [isDropdownOpen, setIsDropdown] = useState(false);
   const { data: session, status } = useSession();
-
+  const router = useRouter();
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status]);
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -50,8 +55,10 @@ export default function AppHeader() {
               className="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow absolute top-0 right-0 mt-12 w-44 dark:bg-gray-700 dark:divide-gray-600"
             >
               <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                <div>Bonnie Green</div>
-                <div className="font-medium truncate">name@flowbite.com</div>
+                <div>{session?.user?.name}</div>
+                <div className="font-medium truncate">
+                  {session?.user?.email}
+                </div>
               </div>
               <ul
                 className="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -81,15 +88,18 @@ export default function AppHeader() {
                     Earnings
                   </a>
                 </li>
+                <li>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      signOut();
+                    }}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >
+                    Sign out
+                  </button>
+                </li>
               </ul>
-              <div className="py-2">
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                >
-                  Sign out
-                </a>
-              </div>
             </div>
           )}
         </div>
@@ -118,10 +128,10 @@ export default function AppHeader() {
             </li>
             <li>
               <a
-                href="#"
+                href="/resumes"
                 className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
               >
-                Services
+                Resumes
               </a>
             </li>
             <li>

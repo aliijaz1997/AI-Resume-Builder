@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import React from "react";
+import React, { useEffect } from "react";
 import AppHeader from "./AppLayout/appHeader";
 import AuthHeader from "./AuthLayout/authHeader";
 import { authOptions } from "../../lib/auth";

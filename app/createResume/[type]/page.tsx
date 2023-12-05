@@ -5,9 +5,13 @@ import ResumePreview from "../../../components/Resume/resumePreview";
 import { useFormik } from "formik";
 import { validationSchema } from "../../../components/Resume/formValidation";
 import { useDebounce } from "usehooks-ts";
+import { useSession } from "next-auth/react";
+import { useToast } from "../../../components/ui/use-toast";
 
 export default function Resume({ params }: { params: { type: string } }) {
   const { type } = params;
+  const { data: authUser } = useSession();
+  const { toast } = useToast();
 
   const formik = useFormik({
     initialValues: {
@@ -24,8 +28,20 @@ export default function Resume({ params }: { params: { type: string } }) {
       achievements: [],
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      const response = await fetch("/api/resume", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...values, userEmail: authUser?.user?.email }),
+      });
+
+      if (response.status === 201) {
+        toast({
+          title: "Resume Created Successfully",
+        });
+      }
     },
   });
 

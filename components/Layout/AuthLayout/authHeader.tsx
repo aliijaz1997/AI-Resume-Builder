@@ -1,12 +1,20 @@
 "use client";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import React from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 export default function AuthHeader() {
   const pathname = usePathname();
   const hideHeader = pathname === "/login" || pathname === "/register";
+  const router = useRouter();
+  const { status } = useSession();
 
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/");
+    }
+  }, [status]);
   return !hideHeader ? (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
