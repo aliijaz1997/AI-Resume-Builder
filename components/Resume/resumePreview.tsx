@@ -27,7 +27,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ values, type }) => {
   return (
     <div className="lg:w-1/2 flex justify-center font-bold text-2xl text-orange-500">
       <div>
-        <PDFDownloadLink
+        {/* <PDFDownloadLink
           style={{
             margin: "2px",
             backgroundColor: "red",
@@ -41,7 +41,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ values, type }) => {
           {({ blob, url, loading, error }) =>
             loading ? "Loading document..." : "Download PDF"
           }
-        </PDFDownloadLink>
+        </PDFDownloadLink> */}
 
         <PDFViewer width={500} height={700} showToolbar={false} ref={pdfRef}>
           {renderPdfContent()}

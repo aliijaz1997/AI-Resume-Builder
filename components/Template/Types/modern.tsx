@@ -265,7 +265,7 @@ const Modern = ({ values }: ModernProps) => (
                 </View>
                 <List>
                   {description
-                    .split("- ")
+                    .split(description.includes("-") ? "- " : ". ")
                     .filter((item, index) => index !== 0 && item.trim() !== "")
                     .map((item, index) => {
                       return <Item key={index}>{item}</Item>;

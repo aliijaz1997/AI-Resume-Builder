@@ -19,6 +19,8 @@ export async function POST(req: Request) {
       skills,
       achievements,
       userEmail,
+      id,
+      type,
     } = body as unknown as FormValues & { userEmail: string };
 
     const user = await prisma.user.findUnique({
@@ -33,10 +35,12 @@ export async function POST(req: Request) {
 
     const createdResume = await prisma.resume.create({
       data: {
+        id,
         name,
         title,
         email,
         phone,
+        type,
         address,
         userId: user.id,
         education: {
@@ -112,5 +116,89 @@ export async function GET(request: NextApiRequest) {
   } catch (error) {
     console.error("Error getting resume list:", error);
     NextResponse.json({ error: "Could not get resumes" }, { status: 500 });
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json();
+    const {
+      id,
+      name,
+      title,
+      email,
+      phone,
+      address,
+      education,
+      workExperience,
+      skills,
+      achievements,
+      userEmail,
+    } = body as unknown as FormValues & { userEmail: string };
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: userEmail,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const updatedResume = await prisma.resume.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        title,
+        email,
+        phone,
+        address,
+        education: {
+          createMany: {
+            data: education.map((edu) => ({
+              school: edu.school,
+              degree: edu.degree,
+              startDate: edu.startDate,
+              endDate: edu.endDate,
+            })),
+          },
+        },
+        workExperience: {
+          createMany: {
+            data: workExperience.map((exp) => ({
+              company: exp.company,
+              title: exp.title,
+              startDate: exp.startDate,
+              endDate: exp.endDate,
+              description: exp.description,
+            })),
+          },
+        },
+        skills: {
+          set: skills,
+        },
+        achievements: {
+          set: achievements,
+        },
+      },
+      include: {
+        education: true,
+        workExperience: true,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        message: "Resume updated successfully",
+        updatedResume,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error updating resume:", error);
+    NextResponse.json({ error: "Could not update resume" }, { status: 500 });
   }
 }

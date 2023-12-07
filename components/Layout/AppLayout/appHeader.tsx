@@ -1,18 +1,25 @@
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function AppHeader() {
   const [isDropdownOpen, setIsDropdown] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
     }
   }, [status]);
+
+  const isActiveRoute = (pathName: string) => {
+    return pathname === pathName;
+  };
+
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -52,7 +59,7 @@ export default function AppHeader() {
           {isDropdownOpen && (
             <div
               id="dropdownAvatar"
-              className="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow absolute top-0 right-0 mt-12 w-44 dark:bg-gray-700 dark:divide-gray-600"
+              className="z-50 bg-white divide-y divide-gray-100 rounded-lg shadow absolute top-0 right-0 mt-12 w-44 dark:bg-gray-700 dark:divide-gray-600"
             >
               <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                 <div>{session?.user?.name}</div>
@@ -108,12 +115,12 @@ export default function AppHeader() {
           id="navbar-cta"
         >
           <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-            {" "}
             <li>
               <a
                 href="/"
-                className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
-                aria-current="page"
+                className={`block py-2 pl-3 pr-4 ${
+                  isActiveRoute("/") ? "text-blue-700" : "text-gray-900"
+                } rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
               >
                 Home
               </a>
@@ -121,7 +128,11 @@ export default function AppHeader() {
             <li>
               <a
                 href="/templates"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className={`block py-2 pl-3 pr-4 ${
+                  isActiveRoute("/templates")
+                    ? "text-blue-700"
+                    : "text-gray-900"
+                } rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
               >
                 Templates
               </a>
@@ -129,7 +140,9 @@ export default function AppHeader() {
             <li>
               <a
                 href="/resumes"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className={`block py-2 pl-3 pr-4 ${
+                  isActiveRoute("/resumes") ? "text-blue-700" : "text-gray-900"
+                } rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
               >
                 Resumes
               </a>
@@ -137,7 +150,9 @@ export default function AppHeader() {
             <li>
               <a
                 href="#"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className={`block py-2 pl-3 pr-4 ${
+                  isActiveRoute("/contact") ? "text-blue-700" : "text-gray-900"
+                } rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700`}
               >
                 Contact
               </a>
