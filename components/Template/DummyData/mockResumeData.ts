@@ -42,7 +42,7 @@ export const mockValues: FormValues = {
       startDate: "2019",
       endDate: "2021",
       description:
-        "Developed scalable web applications using React.js and Node.js.- Led a team to implement new features and improve performance.",
+        "Developed scalable web applications using React.js and Node.js. - Led a team to implement new features and improve performance. - Designed and implemented RESTful APIs, enhancing system functionality and interoperability. - Conducted regular code reviews, ensuring high code quality and adherence to best practices. - Mentored junior developers, fostering a culture of continuous learning and growth within the team.",
     },
     {
       company: "ABC Corporation",
@@ -50,7 +50,7 @@ export const mockValues: FormValues = {
       startDate: "2018",
       endDate: "2018",
       description:
-        "Assisted in analyzing market trends and preparing reports.- Conducted data-driven research for strategic decision-making.",
+        "Assisted in analyzing market trends and preparing reports. - Conducted data-driven research for strategic decision-making. - Identified cost-saving opportunities through data analysis, resulting in a 15% reduction in expenses. - Contributed insights that influenced a successful product launch strategy in a new market segment. - Collaborated with cross-functional teams, ensuring alignment of market strategies with company goals.",
     },
   ],
 };

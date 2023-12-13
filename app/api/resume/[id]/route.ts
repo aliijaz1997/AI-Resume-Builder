@@ -14,6 +14,8 @@ export async function GET(
       where: { id },
       include: { education: true, workExperience: true },
     });
+    if (!resume)
+      return NextResponse.json({ message: "No resume" }, { status: 404 });
     return NextResponse.json(
       {
         resume,
@@ -22,6 +24,9 @@ export async function GET(
     );
   } catch (error) {
     console.error("Error getting resume:", error);
-    NextResponse.json({ error: "Could not get resume" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Could not get resume" },
+      { status: 500 }
+    );
   }
 }

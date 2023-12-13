@@ -88,7 +88,7 @@ const CreateResumeForm = ({
 
   return (
     <div
-      className=" lg:w-1/2 p-7 "
+      className="lg:w-1/2 p-7 border-2 border-gray-200 rounded-lg shadow-xl m-2"
       id="accordion-collapse"
       data-accordion="collapse"
     >
@@ -423,7 +423,7 @@ const CreateResumeForm = ({
               <button
                 onClick={() => handleRemoveSkill(index)}
                 type="button"
-                className="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-xs px-5 py-2.5 text-center mr-2 mb-2"
+                className="text-white h-10 bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-xs px-5 py-2.5 text-center mr-2 mb-2"
               >
                 <svg
                   className="w-4 h-4 text-white"
@@ -511,7 +511,7 @@ const CreateResumeForm = ({
         <div className="flex justify-center">
           <button
             type="submit"
-            className="text-gray-900 bg-[#F7BE38] hover:bg-[#F7BE38]/90 focus:ring-4 focus:outline-none focus:ring-[#F7BE38]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#F7BE38]/50 mr-2 mb-2"
+            className="text-gray-900 bg-[#F7BE38] hover:bg-[#F7BE38]/90 focus:ring-4 focus:outline-none focus:ring-[#F7BE38]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#F7BE38]/50 mr-2 mb-2 shadow-xl border-2"
           >
             <svg
               className="w-4 h-4 mr-1 text-gray-800 dark:text-white"

@@ -26,3 +26,8 @@ export interface WorkExperience {
   endDate: string;
   description: string;
 }
+
+export interface Custom {
+  name: string;
+  items: string[];
+}
