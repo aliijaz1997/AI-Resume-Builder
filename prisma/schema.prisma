@@ -22,19 +22,20 @@ model User {
 }
 
 model Resume {
-  id             String           @id @default(uuid()) @db.Uuid
-  name           String
-  title          String
-  email          String
-  phone          String
-  address        String
-  education      Education[]
-  workExperience WorkExperience[]
-  skills         String[]
-  achievements   String[]
-  user           User             @relation(fields: [userId], references: [id])
-  userId         Int
-  type           String?
+  id                   String           @id @default(uuid()) @db.Uuid
+  name                 String
+  title                String
+  email                String
+  phone                String
+  address              String
+  educationCustomName  String?
+  experienceCustomName String?
+  education            Education[]
+  workExperience       WorkExperience[]
+  custom               Custom[]
+  user                 User             @relation(fields: [userId], references: [id])
+  userId               Int
+  type                 String?
 }
 
 model Education {
@@ -56,4 +57,12 @@ model WorkExperience {
   description String
   resume      Resume @relation(fields: [resumeId], references: [id])
   resumeId    String @db.Uuid
+}
+
+model Custom {
+  id       String   @id @default(uuid()) @db.Uuid
+  name     String
+  items    String[]
+  Resume   Resume?  @relation(fields: [resumeId], references: [id])
+  resumeId String?  @db.Uuid
 }

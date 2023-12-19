@@ -5,10 +5,11 @@ export interface FormValues {
   email: string;
   phone: string;
   address: string;
+  educationCustomName?: string;
+  experienceCustomName?: string;
   education: Education[];
   workExperience: WorkExperience[];
-  skills: string[];
-  achievements: string[];
+  custom: Custom[];
   type?: string;
 }
 

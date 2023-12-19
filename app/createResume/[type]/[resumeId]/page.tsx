@@ -93,6 +93,7 @@ export default function Resume({
   }, [debouncedFormValues]);
 
   if (isLoading) return <Loader />;
+  console.log(formik.values, "Hello World");
   return (
     <div className="flex justify-center lg:flex-row flex-col bg-white">
       <CreateResumeForm

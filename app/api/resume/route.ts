@@ -13,11 +13,12 @@ export async function POST(req: Request) {
       title,
       email,
       phone,
+      educationCustomName,
+      experienceCustomName,
       address,
       education,
       workExperience,
-      skills,
-      achievements,
+      custom,
       userEmail,
       id,
       type,
@@ -41,6 +42,8 @@ export async function POST(req: Request) {
         email,
         phone,
         type,
+        educationCustomName,
+        experienceCustomName,
         address,
         userId: user.id,
         education: {
@@ -64,16 +67,19 @@ export async function POST(req: Request) {
             })),
           },
         },
-        skills: {
-          set: skills,
-        },
-        achievements: {
-          set: achievements,
+        custom: {
+          createMany: {
+            data: custom.map((c) => ({
+              name: c.name,
+              items: { set: c.items },
+            })),
+          },
         },
       },
       include: {
         education: true,
         workExperience: true,
+        custom: true,
       },
     });
 
@@ -105,7 +111,7 @@ export async function GET(request: NextApiRequest) {
 
     const resumes = await prisma.resume.findMany({
       where: { userId: user.id },
-      include: { education: true, workExperience: true },
+      include: { education: true, workExperience: true, custom: true },
     });
     return NextResponse.json(
       {
@@ -130,9 +136,10 @@ export async function PUT(req: Request) {
       phone,
       address,
       education,
+      educationCustomName,
+      experienceCustomName,
       workExperience,
-      skills,
-      achievements,
+      custom,
       userEmail,
     } = body as unknown as FormValues & { userEmail: string };
 
@@ -155,9 +162,14 @@ export async function PUT(req: Request) {
         title,
         email,
         phone,
+        educationCustomName,
+        experienceCustomName,
         address,
         education: {
-          createMany: {
+          updateMany: {
+            where: {
+              resumeId: id,
+            },
             data: education.map((edu) => ({
               school: edu.school,
               degree: edu.degree,
@@ -167,7 +179,10 @@ export async function PUT(req: Request) {
           },
         },
         workExperience: {
-          createMany: {
+          updateMany: {
+            where: {
+              resumeId: id,
+            },
             data: workExperience.map((exp) => ({
               company: exp.company,
               title: exp.title,
@@ -177,11 +192,16 @@ export async function PUT(req: Request) {
             })),
           },
         },
-        skills: {
-          set: skills,
-        },
-        achievements: {
-          set: achievements,
+        custom: {
+          updateMany: {
+            where: {
+              resumeId: id,
+            },
+            data: custom.map((c) => ({
+              name: c.name,
+              items: { set: c.items },
+            })),
+          },
         },
       },
       include: {

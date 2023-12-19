@@ -61,25 +61,50 @@ const CreateResumeForm = ({
     updatedExperience.splice(index, 1);
     setFieldValue("workExperience", updatedExperience);
   };
+  const handleCustomChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+    customType: string
+  ) => {
+    const updatedCustom = [...values.custom];
+    const itemIndex = updatedCustom.findIndex(
+      (item) => item.name === customType
+    );
 
-  const handleAddSkill = () => {
-    setFieldValue("skills", [...values.skills, ""]);
+    if (itemIndex !== -1) {
+      updatedCustom[itemIndex].items[index] = event.target.value;
+
+      // Update Formik values using setFieldValue
+      setFieldValue("custom", updatedCustom);
+    }
   };
 
-  const handleRemoveSkill = (index: number) => {
-    const updatedSkills = [...values.skills];
-    updatedSkills.splice(index, 1);
-    setFieldValue("skills", updatedSkills);
+  const handleRemoveCustomItem = (index: number, customType: string) => {
+    const updatedCustom = [...values.custom];
+    const itemIndex = updatedCustom.findIndex(
+      (item) => item.name === customType
+    );
+
+    if (itemIndex !== -1) {
+      updatedCustom[itemIndex].items.splice(index, 1);
+
+      // Update Formik values using setFieldValue
+      setFieldValue("custom", updatedCustom);
+    }
   };
 
-  const handleAddAchievement = () => {
-    setFieldValue("achievements", [...values.achievements, ""]);
-  };
+  const handleAddCustomItem = (customType: string) => {
+    const updatedCustom = [...values.custom];
+    const itemIndex = updatedCustom.findIndex(
+      (item) => item.name === customType
+    );
 
-  const handleRemoveAchievement = (index: number) => {
-    const updatedAchievements = [...values.achievements];
-    updatedAchievements.splice(index, 1);
-    setFieldValue("achievements", updatedAchievements);
+    if (itemIndex !== -1) {
+      updatedCustom[itemIndex].items.push("");
+
+      // Update Formik values using setFieldValue
+      setFieldValue("custom", updatedCustom);
+    }
   };
 
   const toggleAccordion = (index: number) => {
@@ -97,7 +122,9 @@ const CreateResumeForm = ({
           index={0}
           activeAccordion={activeAccordion}
           toggleAccordion={toggleAccordion}
+          setFieldValue={setFieldValue}
           title="Personal Information"
+          type="personal"
         >
           <Input
             id="name"
@@ -165,7 +192,13 @@ const CreateResumeForm = ({
           index={1}
           activeAccordion={activeAccordion}
           toggleAccordion={toggleAccordion}
-          title="Education"
+          setFieldValue={setFieldValue}
+          title={
+            values.educationCustomName
+              ? values.educationCustomName
+              : "Education"
+          }
+          type="education"
         >
           {values.education.map((item, index) => (
             <div key={index} className="space-y-2">
@@ -278,7 +311,13 @@ const CreateResumeForm = ({
           index={2}
           activeAccordion={activeAccordion}
           toggleAccordion={toggleAccordion}
-          title="Work Experience"
+          setFieldValue={setFieldValue}
+          title={
+            values.experienceCustomName
+              ? values.experienceCustomName
+              : "Work Experience"
+          }
+          type="experience"
         >
           {values.workExperience.map((item, index) => (
             <div key={index} className="space-y-2">
@@ -400,114 +439,71 @@ const CreateResumeForm = ({
           </button>
         </AccordionItem>
 
-        <AccordionItem
-          index={3}
-          activeAccordion={activeAccordion}
-          toggleAccordion={toggleAccordion}
-          title="Skills"
-        >
-          {values.skills.map((item, index) => (
-            <div
-              key={index}
-              className="space-y-2 flex text-center justify-between"
+        {values.custom.map((customItem, accordionIndex) => (
+          <AccordionItem
+            key={accordionIndex + 2}
+            index={accordionIndex + 3}
+            activeAccordion={activeAccordion}
+            toggleAccordion={toggleAccordion}
+            setFieldValue={setFieldValue}
+            title={customItem.name}
+            type="custom"
+          >
+            {customItem.items.map((item, itemIndex) => (
+              <div
+                key={itemIndex}
+                className="space-y-2 flex text-center justify-between"
+              >
+                <div className="form-group">
+                  <Input
+                    id={`${customItem.name.toLowerCase()}[${itemIndex}]`}
+                    labelText={customItem.name}
+                    type="text"
+                    value={item}
+                    onChange={(e) =>
+                      handleCustomChange(e, itemIndex, customItem.name)
+                    }
+                  />
+                </div>
+                <button
+                  onClick={() =>
+                    handleRemoveCustomItem(itemIndex, customItem.name)
+                  }
+                  type="button"
+                  className="text-white h-10 bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-xs px-5 py-2.5 text-center mr-2 mb-2"
+                >
+                  <svg
+                    className="w-4 h-4 text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 18 2"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M1 1h16"
+                    />
+                  </svg>
+                  <span className="sr-only">Remove</span>
+                </button>
+              </div>
+            ))}
+
+            <button
+              className="relative inline-flex items-center justify-center p-0.5 m-3 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800"
+              type="button"
+              onClick={() => handleAddCustomItem(customItem.name)}
             >
-              <div className="form-group">
-                <Input
-                  id={`skills[${index}]`}
-                  labelText="Skill"
-                  type="text"
-                  value={item}
-                  onChange={handleChange}
-                />
-              </div>
-              <button
-                onClick={() => handleRemoveSkill(index)}
-                type="button"
-                className="text-white h-10 bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-xs px-5 py-2.5 text-center mr-2 mb-2"
-              >
-                <svg
-                  className="w-4 h-4 text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 2"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M1 1h16"
-                  />
-                </svg>
-                <span className="sr-only">Remove</span>
-              </button>
-            </div>
-          ))}
+              <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                Add {customItem.name}
+              </span>
+            </button>
+          </AccordionItem>
+        ))}
 
-          <button
-            className="relative inline-flex items-center justify-center p-0.5 m-3 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800"
-            type="button"
-            onClick={handleAddSkill}
-          >
-            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-              Add Skill
-            </span>
-          </button>
-        </AccordionItem>
-
-        <AccordionItem
-          index={4}
-          activeAccordion={activeAccordion}
-          toggleAccordion={toggleAccordion}
-          title="Achievements"
-        >
-          {values.achievements.map((item, index) => (
-            <div key={index} className="space-y-2">
-              <div className="form-group">
-                <Input
-                  id={`achievements[${index}]`}
-                  labelText="Achievement"
-                  type="text"
-                  value={item}
-                  onChange={handleChange}
-                />
-              </div>
-              <button
-                onClick={() => handleRemoveAchievement(index)}
-                type="button"
-                className="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-              >
-                <svg
-                  className="w-4 h-4 text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 2"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M1 1h16"
-                  />
-                </svg>
-                <span className="sr-only">Remove</span>
-              </button>
-            </div>
-          ))}
-
-          <button
-            className="relative inline-flex items-center justify-center p-0.5 m-3 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800"
-            type="button"
-            onClick={handleAddAchievement}
-          >
-            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-              Add Achievement
-            </span>
-          </button>
-        </AccordionItem>
         <div className="flex justify-center">
           <button
             type="submit"

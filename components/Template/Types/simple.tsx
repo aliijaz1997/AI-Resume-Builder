@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
   leftColumn: {
     width: "40%",
     padding: 10,
-    backgroundColor: "#000",
-    color: "#FFF", // Yellow background color for left column
+    backgroundColor: "#F8C44C",
+    color: "#000", // Yellow background color for left column
   },
   rightColumn: {
     width: "60%",
@@ -99,9 +99,12 @@ const Simple = ({ values }: SimpleProps) => {
               </>
             );
           })}
-
-          <Text style={styles.sectionTitle}>Skills</Text>
-          <Text style={styles.content}>{values.skills.join(", ")}</Text>
+          {values.custom.map((c, idx) => (
+            <view key={idx}>
+              <Text style={styles.sectionTitle}>{c.name}</Text>
+              <Text style={styles.content}>{c.items.join(", ")}</Text>
+            </view>
+          ))}
 
           <Text style={styles.sectionTitle}>Experience</Text>
           {values.workExperience.map(

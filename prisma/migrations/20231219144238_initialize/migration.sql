@@ -18,8 +18,8 @@ CREATE TABLE "Resume" (
     "email" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
     "address" TEXT NOT NULL,
-    "skills" TEXT[],
-    "achievements" TEXT[],
+    "educationCustomName" TEXT,
+    "experienceCustomName" TEXT,
     "userId" INTEGER NOT NULL,
     "type" TEXT,
 
@@ -51,6 +51,16 @@ CREATE TABLE "WorkExperience" (
     CONSTRAINT "WorkExperience_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Custom" (
+    "id" UUID NOT NULL,
+    "name" TEXT NOT NULL,
+    "items" TEXT[],
+    "resumeId" UUID,
+
+    CONSTRAINT "Custom_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -62,3 +72,6 @@ ALTER TABLE "Education" ADD CONSTRAINT "Education_resumeId_fkey" FOREIGN KEY ("r
 
 -- AddForeignKey
 ALTER TABLE "WorkExperience" ADD CONSTRAINT "WorkExperience_resumeId_fkey" FOREIGN KEY ("resumeId") REFERENCES "Resume"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Custom" ADD CONSTRAINT "Custom_resumeId_fkey" FOREIGN KEY ("resumeId") REFERENCES "Resume"("id") ON DELETE SET NULL ON UPDATE CASCADE;

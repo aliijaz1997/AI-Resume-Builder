@@ -1,11 +1,19 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
+import { FormValues } from "../../utils/types/formValues";
+import { FormikErrors } from "formik";
 
 interface AccordionItemProps {
   index: number;
   activeAccordion: number | null;
-  toggleAccordion: (index: number) => void;
   title: string;
+  type: string;
   children: React.ReactNode;
+  toggleAccordion: (index: number) => void;
+  setFieldValue: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean | undefined
+  ) => Promise<void> | Promise<FormikErrors<FormValues>>;
 }
 
 const AccordionItem: React.FC<AccordionItemProps> = ({
@@ -13,12 +21,28 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   activeAccordion,
   toggleAccordion,
   title,
+  type,
+  setFieldValue,
+
   children,
 }) => {
   const [edit, setEdit] = useState(false);
-  const [accordionTitle, setAccordionTitle] = useState(title);
   const isActive = activeAccordion === index;
-
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const currentValue = e.target.value;
+    console.log(title, currentValue, type);
+    if (type !== "custom") {
+      if (type === "education") {
+        setFieldValue("educationCustomName", currentValue);
+      } else if (type === "experience") {
+        setFieldValue("experienceCustomName", currentValue);
+      }
+    } else {
+      if (type === "custom") {
+        setFieldValue(`custom.${index - 3}.name`, currentValue);
+      }
+    }
+  };
   return (
     <div>
       <h2>
@@ -27,21 +51,22 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
           className={`flex items-center justify-between w-full p-5 font-medium text-left text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 ${
             isActive ? "hover:bg-gray-100 dark:hover-bg-gray-800" : ""
           }`}
-          onClick={() => toggleAccordion(index)}
-          aria-expanded={isActive}
-          aria-controls={`accordion-collapse-body-${index}`}
         >
           {title === "Personal Information" ? (
-            <span>{accordionTitle}</span>
+            <span>{title}</span>
           ) : (
             <div className="flex items-center">
               {!edit ? (
-                <span>{accordionTitle}</span>
+                <span>{title}</span>
               ) : (
                 <input
-                  value={accordionTitle}
-                  onChange={(e) => {
-                    setAccordionTitle(e.target.value);
+                  className={`${
+                    isActive ? "bg-white" : "bg-gray-200"
+                  } rounded-lg p-1`}
+                  value={title}
+                  onChange={handleTitleChange}
+                  onBlur={() => {
+                    setEdit(false);
                   }}
                 />
               )}
@@ -63,6 +88,9 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             className={`w-3 h-3 rotate-180 shrink-0 ${
               isActive ? "" : "transform rotate-0"
             }`}
+            onClick={() => toggleAccordion(index)}
+            aria-expanded={isActive}
+            aria-controls={`accordion-collapse-body-${index}`}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

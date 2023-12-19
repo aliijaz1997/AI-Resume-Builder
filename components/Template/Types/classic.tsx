@@ -55,7 +55,9 @@ const Classic = ({ values }: ClassicProps) => (
   <Page style={styles.page}>
     <View style={styles.container}>
       <Text style={styles.header}>{values.name || "Your Name"}</Text>
-      <Text style={styles.sectionTitle}>Education</Text>
+      <Text style={styles.sectionTitle}>
+        {values.educationCustomName ? values.educationCustomName : "Education"}
+      </Text>
       {values.education.map((edu) => {
         return (
           <Text>
@@ -68,14 +70,11 @@ const Classic = ({ values }: ClassicProps) => (
         );
       })}
 
-      <Text style={styles.sectionTitle}>Skills</Text>
-      {values.skills.map((skill, i) => (
-        <Text key={i} style={styles.sectionContent}>
-          {skill}
-        </Text>
-      ))}
-
-      <Text style={styles.sectionTitle}>Experience</Text>
+      <Text style={styles.sectionTitle}>
+        {values.experienceCustomName
+          ? values.experienceCustomName
+          : "Work Experience"}
+      </Text>
       {values.workExperience.map(
         ({ company, description, endDate, startDate, title }, i) => (
           <View key={i}>
@@ -99,6 +98,19 @@ const Classic = ({ values }: ClassicProps) => (
         )
       )}
     </View>
+    <view>
+      {values.custom.map((c) => (
+        <view>
+          <Text style={styles.sectionTitle}>{c.name}</Text>
+          {c.items.map((item, idx) => (
+            <Text key={idx} style={styles.sectionContent}>
+              {item}
+            </Text>
+          ))}
+        </view>
+      ))}
+    </view>
+
     <Text style={styles.footer}>This is the classic resume template</Text>
   </Page>
 );

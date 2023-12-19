@@ -240,10 +240,12 @@ const Modern = ({ values }: ModernProps) => (
             </>
           ))}
         </View>
-        <View>
-          <Text style={styles.title}>Skills</Text>
-          <SkillEntry skills={values.skills} />
-        </View>
+        {values.custom.map((c, idx) => (
+          <View key={idx}>
+            <Text style={styles.title}>{c.name}</Text>
+            <SkillEntry skills={c.items} />
+          </View>
+        ))}
       </View>
       <View style={styles.rightColumn}>
         <View style={styles.experienceContainer}>
