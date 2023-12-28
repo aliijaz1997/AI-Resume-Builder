@@ -13,5 +13,10 @@
     "name": "Classic",
     "image": "/Resume3.png",
     "variant": "basic"
+  },
+  {
+    "name": "Stylish",
+    "image": "/Resume3.png",
+    "variant": "premium"
   }
 ]

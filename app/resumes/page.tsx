@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Modern from "../../components/Template/Types/modern";
 import Classic from "../../components/Template/Types/classic";
 import { dummyResumeLists } from "../../components/Template/DummyData/mockResumeData";
+import Stylish from "../../components/Template/Types/stylish";
 
 export default function Resumes() {
   const { data: user } = useSession();
@@ -31,8 +32,10 @@ export default function Resumes() {
           <Modern values={values} />
         ) : type === "simple" ? (
           <Simple values={values} />
-        ) : (
+        ) : type === "classic" ? (
           <Classic values={values} />
+        ) : (
+          <Stylish values={values} />
         )}
       </Document>
     );

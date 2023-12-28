@@ -4,6 +4,7 @@ import Modern from "../Template/Types/modern";
 import Simple from "../Template/Types/simple";
 import { FormValues } from "../../utils/types/formValues";
 import Classic from "../Template/Types/classic";
+import Stylish from "../Template/Types/stylish";
 
 interface ResumePreviewProps {
   values: FormValues;
@@ -20,8 +21,10 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ values, type }) => {
           <Modern values={values} />
         ) : type === "simple" ? (
           <Simple values={values} />
-        ) : (
+        ) : type === "classic" ? (
           <Classic values={values} />
+        ) : (
+          <Stylish values={values} />
         )}
       </Document>
     );

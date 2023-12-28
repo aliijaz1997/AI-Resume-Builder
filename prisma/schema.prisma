@@ -12,13 +12,15 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  image     String?
-  password  String
-  createdAt DateTime @default(now())
-  resumes   Resume[]
+  id          Int         @id @default(autoincrement())
+  name        String
+  email       String      @unique
+  image       String?
+  password    String
+  createdAt   DateTime    @default(now())
+  resumes     Resume[]
+  customerId  String?
+  paymentPlan PaymentPlan @default(Free)
 }
 
 model Resume {
@@ -65,4 +67,10 @@ model Custom {
   items    String[]
   Resume   Resume?  @relation(fields: [resumeId], references: [id])
   resumeId String?  @db.Uuid
+}
+
+enum PaymentPlan {
+  Free
+  Standard
+  Premium
 }
