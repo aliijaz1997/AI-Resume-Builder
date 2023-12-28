@@ -7,6 +7,12 @@ import "flowbite-datepicker";
 import "flowbite/dist/datepicker.turbo.js";
 import { FormikErrors, FormikTouched } from "formik";
 import { FormValues } from "../../utils/types/formValues";
+import { Document, PDFDownloadLink } from "@react-pdf/renderer";
+import Modern from "../Template/Types/modern";
+import Simple from "../Template/Types/simple";
+import Classic from "../Template/Types/classic";
+import { Stylish } from "next/font/google";
+import Dark from "../Template/Types/dark";
 
 interface CreateResumeFormProps {
   values: FormValues;
@@ -109,6 +115,28 @@ const CreateResumeForm = ({
 
   const toggleAccordion = (index: number) => {
     setActiveAccordion((prevIndex) => (prevIndex === index ? null : index));
+  };
+
+  const renderPdfContent = ({
+    type,
+    values,
+  }: {
+    type: string;
+    values: FormValues;
+  }) => {
+    return (
+      <Document>
+        {type === "modern" ? (
+          <Modern values={values} />
+        ) : type === "simple" ? (
+          <Simple values={values} />
+        ) : type === "classic" ? (
+          <Classic values={values} />
+        ) : (
+          <Dark values={values} />
+        )}
+      </Document>
+    );
   };
 
   return (
@@ -504,7 +532,7 @@ const CreateResumeForm = ({
           </AccordionItem>
         ))}
 
-        <div className="flex justify-center">
+        <div className="flex justify-around">
           <button
             type="submit"
             className="text-gray-900 bg-[#F7BE38] hover:bg-[#F7BE38]/90 focus:ring-4 focus:outline-none focus:ring-[#F7BE38]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#F7BE38]/50 mr-2 mb-2 shadow-xl border-2"
@@ -521,6 +549,25 @@ const CreateResumeForm = ({
             </svg>
             Generate Resume
           </button>
+          <PDFDownloadLink
+            style={{
+              margin: "2px",
+              backgroundColor: "#3C81F7",
+              borderRadius: "0.5rem",
+              padding: "16px 6px 16px",
+              color: "white",
+              fontSize: "13px",
+            }}
+            document={renderPdfContent({
+              type: values.type ? values.type : "simple",
+              values,
+            })}
+            fileName="resume.pdf"
+          >
+            {({ blob, url, loading, error }) =>
+              loading ? "Loading document..." : "Download"
+            }
+          </PDFDownloadLink>
         </div>
       </form>
     </div>

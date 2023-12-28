@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     const { email, stripeTokenId, subscriptionType } = await req.json();
     let priceId = "";
 
-    if (subscriptionType === "premium") {
+    if (subscriptionType === "Premium") {
       priceId = process.env.PREMIUM_PRICE_ID as string;
     } else {
       priceId = process.env.STANDARD_PRICE_ID as string;
@@ -20,7 +20,6 @@ export async function POST(req: Request) {
         email,
       },
     });
-    console.log(email, stripeTokenId, subscriptionType, priceId);
     if (!user)
       return NextResponse.json(
         {
@@ -48,7 +47,6 @@ export async function POST(req: Request) {
         customer: newCustomer.id,
         type: "card",
       });
-      console.log(paymentMethods.data, "Inside");
       await stripe.customers.update(newCustomer.id, {
         invoice_settings: {
           default_payment_method: stripeTokenId,
@@ -59,13 +57,24 @@ export async function POST(req: Request) {
         customer: newCustomer.id,
         price: priceId,
       });
-      if (subscriptions.data.length) {
-        console.log(subscriptions.data, "SUBSCRIPTION DATA");
+      const currentSubscription = subscriptions.data.find(
+        (sub) => sub.items.data[0].price.id === priceId
+      );
+      if (currentSubscription) {
         return NextResponse.json(
           { message: "You are already subscribed to the current plan" },
           { status: 400 }
         );
       }
+
+      await Promise.all(
+        subscriptions.data.map(async (sub) => {
+          await stripe.subscriptions.update(sub.id, {
+            cancel_at_period_end: false,
+            cancel_at: Math.floor(Date.now() / 1000), // Setting the cancellation time to now
+          });
+        })
+      );
 
       const subscription = await stripe.subscriptions.create({
         customer: newCustomer.id,
@@ -93,7 +102,6 @@ export async function POST(req: Request) {
         { status: 201 }
       );
     }
-    console.log("Pre payment method");
     const paymentMethods = await stripe.paymentMethods.list({
       customer: user.customerId,
       type: "card",
@@ -107,23 +115,36 @@ export async function POST(req: Request) {
           default_payment_method: stripeTokenId,
         },
       });
-      console.log(paymentMethod, update);
     }
-
-    console.log({
-      paymentMethods: paymentMethods.data,
-      customerId: user.customerId,
-      priceId,
+    const subscriptions = await stripe.subscriptions.list({
+      customer: user.customerId,
+      price: priceId,
     });
+    console.log(subscriptions.data);
+    const currentSubscription = subscriptions.data.find(
+      (sub) => sub.items.data[0].price.id === priceId
+    );
 
-    const subscriptions = await stripe.subscriptions.list();
-    if (subscriptions.data.length) {
+    if (currentSubscription) {
       return NextResponse.json(
         { message: "You are already subscribed to the current plan" },
         { status: 400 }
       );
     }
 
+    const customerSubscription = await stripe.subscriptions.list({
+      customer: user.customerId,
+    });
+
+    for (const sub of customerSubscription.data) {
+      console.log({ sub: sub.id });
+      try {
+        const canceledSubscription = await stripe.subscriptions.cancel(sub.id);
+        console.log("Subscription canceled:", canceledSubscription, sub);
+      } catch (error) {
+        console.error("Error canceling subscription:", error);
+      }
+    }
     const subscription = await stripe.subscriptions.create({
       customer: user.customerId,
       items: [

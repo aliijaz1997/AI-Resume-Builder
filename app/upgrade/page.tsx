@@ -4,11 +4,13 @@ import { pricingOptions } from "../../components/pricing/pricingOptions";
 import PricingCard from "../../components/pricing/pricingCard";
 import { useSession } from "next-auth/react";
 import { User } from "../../utils/types/user";
+import Loader from "../../components/Loader/loader";
 
 const Upgrade = () => {
   const { data: user } = useSession();
   const [dbUser, setDbUser] = useState<User>();
-  console.log(dbUser);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (user?.user) {
       fetch(`/api/user/${user.user?.email}`, {
@@ -24,15 +26,19 @@ const Upgrade = () => {
           const { user } = await res.json();
           if (user) {
             setDbUser(user);
+            setLoading(false);
           }
         })
         .catch((error) => {
+          setLoading(false);
           console.error(error);
         });
     }
   }, [user?.user]);
+
   return (
     <section className="bg-white dark:bg-gray-900">
+      {loading && <Loader />}
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
         <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12 bg-blue-900 rounded-full p-2 pt-5">
           <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-white dark:text-white">

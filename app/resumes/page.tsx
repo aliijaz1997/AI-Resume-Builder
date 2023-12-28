@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Modern from "../../components/Template/Types/modern";
 import Classic from "../../components/Template/Types/classic";
 import { dummyResumeLists } from "../../components/Template/DummyData/mockResumeData";
-import Stylish from "../../components/Template/Types/stylish";
+import Stylish from "../../components/Template/Types/dark";
 
 export default function Resumes() {
   const { data: user } = useSession();

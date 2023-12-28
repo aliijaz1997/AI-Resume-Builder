@@ -12,11 +12,11 @@
   {
     "name": "Classic",
     "image": "/Resume3.png",
-    "variant": "basic"
+    "variant": "standard"
   },
   {
-    "name": "Stylish",
-    "image": "/Resume3.png",
+    "name": "Dark",
+    "image": "/Resume4.png",
     "variant": "premium"
   }
 ]

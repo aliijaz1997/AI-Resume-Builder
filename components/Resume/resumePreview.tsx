@@ -4,7 +4,7 @@ import Modern from "../Template/Types/modern";
 import Simple from "../Template/Types/simple";
 import { FormValues } from "../../utils/types/formValues";
 import Classic from "../Template/Types/classic";
-import Stylish from "../Template/Types/stylish";
+import Stylish from "../Template/Types/dark";
 
 interface ResumePreviewProps {
   values: FormValues;

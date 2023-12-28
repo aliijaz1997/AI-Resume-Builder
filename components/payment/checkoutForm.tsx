@@ -35,7 +35,6 @@ export default function CheckoutForm({
     if (paymentMethod) {
       const stripeTokenId = paymentMethod!.id!;
       console.log(stripeTokenId, error);
-      if (loading) return <Loader />;
       if (!error) {
         console.log("Backend API Zone");
         const response = await fetch("/api/subscription", {
@@ -57,8 +56,11 @@ export default function CheckoutForm({
           router.push("/templates");
         } else {
           setLoading(false);
-          console.log(response);
-          toast({ title: "Failed subscription. Please try again!" });
+          if (response.status === 400) {
+            toast({ title: "You are already subscribed to the current plan" });
+          } else {
+            toast({ title: "Failed subscription. Please try again!" });
+          }
         }
       } else {
         console.log({ error });
@@ -69,6 +71,7 @@ export default function CheckoutForm({
   };
   return (
     <div>
+      {loading && <Loader />}
       <div className="flex flex-col items-center border-b bg-white py-4 sm:flex-row sm:px-10 lg:px-20 xl:px-32">
         <div className="mt-4 py-2 text-xs sm:mt-0 sm:ml-auto sm:text-base"></div>
       </div>
