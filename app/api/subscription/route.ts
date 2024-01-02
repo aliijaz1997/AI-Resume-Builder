@@ -43,10 +43,10 @@ export async function POST(req: Request) {
           customerId: newCustomer.id,
         },
       });
-      const paymentMethods = await stripe.paymentMethods.list({
+      await stripe.paymentMethods.attach(stripeTokenId, {
         customer: newCustomer.id,
-        type: "card",
       });
+
       await stripe.customers.update(newCustomer.id, {
         invoice_settings: {
           default_payment_method: stripeTokenId,
@@ -120,7 +120,6 @@ export async function POST(req: Request) {
       customer: user.customerId,
       price: priceId,
     });
-    console.log(subscriptions.data);
     const currentSubscription = subscriptions.data.find(
       (sub) => sub.items.data[0].price.id === priceId
     );
@@ -137,10 +136,8 @@ export async function POST(req: Request) {
     });
 
     for (const sub of customerSubscription.data) {
-      console.log({ sub: sub.id });
       try {
         const canceledSubscription = await stripe.subscriptions.cancel(sub.id);
-        console.log("Subscription canceled:", canceledSubscription, sub);
       } catch (error) {
         console.error("Error canceling subscription:", error);
       }

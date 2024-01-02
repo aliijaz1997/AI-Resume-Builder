@@ -30,7 +30,6 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   const isActive = activeAccordion === index;
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const currentValue = e.target.value;
-    console.log(title, currentValue, type);
     if (type !== "custom") {
       if (type === "education") {
         setFieldValue("educationCustomName", currentValue);

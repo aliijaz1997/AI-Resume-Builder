@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { User } from "../../utils/types/user";
 import Loader from "../../components/Loader/loader";
+import Hero from "../../components/Template/components/hero";
 
 const Templates = () => {
   const { data: user } = useSession();
@@ -57,33 +58,53 @@ const Templates = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-white p-4">
-      {loading && <Loader />}
-      {templates.map((template, index) => (
-        <div
-          key={index}
-          className="border rounded-lg overflow-hidden hover:shadow-lg cursor-pointer"
-          onClick={() => handleTemplateClick(template)}
-        >
-          <div className="relative h-60">
-            <Image
-              src={template.image}
-              alt={template.name}
-              layout="fill"
-              objectFit="contain"
-              className="object-contain"
-            />
-          </div>
-          <div className="p-4">
-            <h3 className="text-xl font-semibold text-center mb-2">
-              {template.name}
-            </h3>
-            <p className="text-sm text-gray-500 text-center">
-              {template.variant}
-            </p>
-          </div>
+    <div className="p-4 max-w-screen-xl mx-auto">
+      <Hero />
+      <div className="p-4 max-w-screen-xl mx-auto flex justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-white ">
+          {loading && <Loader />}
+          {templates.map((template, index) => (
+            <div key={index}>
+              <div
+                key={index}
+                className="border rounded-lg overflow-hidden hover:shadow-lg relative group"
+                style={{ height: "400px", width: "300px" }}
+              >
+                <div className="absolute inset-0 overflow-hidden group-hover:brightness-50">
+                  <Image
+                    src={template.image}
+                    alt={template.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className="object-cover transition-all duration-300 ease-in-out"
+                  />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+                  <div className="flex flex-col items-center">
+                    <button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg mb-2">
+                      Preview
+                    </button>
+                    <button
+                      onClick={() => handleTemplateClick(template)}
+                      className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
+                    >
+                      Use Template
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="">
+                <h3 className="text-xl font-semibold text-center mb-2">
+                  {template.name}
+                </h3>
+                <p className="text-sm text-center text-gray-500 font-medium">
+                  {template.variant.toUpperCase()}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 };

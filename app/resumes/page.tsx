@@ -3,13 +3,13 @@ import { Document, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { FormValues } from "../../utils/types/formValues";
-import Simple from "../../components/Template/Types/simple";
+import Simple from "../../components/Template/components/Types/simple";
 import Loader from "../../components/Loader/loader";
 import { useRouter } from "next/navigation";
-import Modern from "../../components/Template/Types/modern";
-import Classic from "../../components/Template/Types/classic";
+import Modern from "../../components/Template/components/Types/modern";
+import Classic from "../../components/Template/components/Types/classic";
 import { dummyResumeLists } from "../../components/Template/DummyData/mockResumeData";
-import Stylish from "../../components/Template/Types/dark";
+import Stylish from "../../components/Template/components/Types/dark";
 
 export default function Resumes() {
   const { data: user } = useSession();

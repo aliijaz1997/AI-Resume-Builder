@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
 import { Document, PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
-import Modern from "../Template/Types/modern";
-import Simple from "../Template/Types/simple";
+import Modern from "../Template/components/Types/modern";
+import Simple from "../Template/components/Types/simple";
 import { FormValues } from "../../utils/types/formValues";
-import Classic from "../Template/Types/classic";
-import Stylish from "../Template/Types/dark";
+import Classic from "../Template/components/Types/classic";
+import Stylish from "../Template/components/Types/dark";
 
 interface ResumePreviewProps {
   values: FormValues;

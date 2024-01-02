@@ -6,18 +6,11 @@ const DottedLoader = ({ message }: { message: string }) => {
       <div className="flex flex-col items-center">
         <div className="animate-spin mb-4">
           <svg
-            className="w-12 h-12 border-t-2 border-blue-500 border-solid rounded-full"
+            className="w-12 h-12 border-t-4 border-red-500 border-solid rounded-full"
             viewBox="0 0 24 24"
           >
             <path
-              className="opacity-75"
-              fill="none"
-              stroke="#000"
-              strokeWidth="2"
-              d="M0 12 C7.2 12 12 6.8 12 0"
-            ></path>
-            <path
-              className="text-blue-500"
+              className="text-red-500"
               fill="none"
               stroke="#000"
               strokeWidth="2"

@@ -14,11 +14,9 @@ const PricingCard = ({
   buttonText,
   plan,
 }: PricingCardType) => {
-  console.log(plan);
   const [activated, setActivated] = useState(false);
   useEffect(() => {
     if (plan) {
-      console.log(plan.toLowerCase(), title.toLowerCase());
       setActivated(plan.toLowerCase() === title.toLowerCase());
     }
   }, [plan]);

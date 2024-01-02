@@ -34,9 +34,7 @@ export default function CheckoutForm({
     });
     if (paymentMethod) {
       const stripeTokenId = paymentMethod!.id!;
-      console.log(stripeTokenId, error);
       if (!error) {
-        console.log("Backend API Zone");
         const response = await fetch("/api/subscription", {
           method: "POST",
           headers: {

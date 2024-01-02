@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Link,
 } from "@react-pdf/renderer";
-import { FormValues } from "../../../utils/types/formValues";
+import { FormValues } from "../../../../utils/types/formValues";
 
 const styles = StyleSheet.create({
   page: {
