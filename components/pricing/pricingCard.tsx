@@ -6,6 +6,7 @@ interface PricingCardType {
   features: string[];
   buttonText?: string;
   plan?: string;
+  handleCancel: (plan?: string) => void;
 }
 const PricingCard = ({
   title,
@@ -13,6 +14,7 @@ const PricingCard = ({
   features,
   buttonText,
   plan,
+  handleCancel,
 }: PricingCardType) => {
   const [activated, setActivated] = useState(false);
   useEffect(() => {
@@ -62,13 +64,21 @@ const PricingCard = ({
           </li>
         ))}
       </ul>
-      {buttonText && (
+      {buttonText && !activated && (
         <a
           href={`/checkout/${title.toLowerCase()}`}
           className="text-white bg-black hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:focus:ring-primary-900"
         >
           {buttonText}
         </a>
+      )}
+      {activated && plan !== "Free" && (
+        <button
+          onClick={() => handleCancel(plan)}
+          className="text-white bg-red-500 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:focus:ring-primary-900"
+        >
+          Cancel Subscription
+        </button>
       )}
     </div>
   );

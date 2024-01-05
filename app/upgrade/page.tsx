@@ -36,6 +36,46 @@ const Upgrade = () => {
     }
   }, [user?.user]);
 
+  const handleCancel = async (plan?: string) => {
+    if (plan && user) {
+      setLoading(true);
+      fetch("/api/subscription/cancel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          subscriptionType: plan,
+          email: user?.user?.email,
+        }),
+      })
+        .then(async (res) => {
+          if (res.status === 200) {
+            console.log("Success fully cancel subscription");
+            const userResponse = await fetch(`/api/user/${user.user?.email}`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            const { user: updatedUser } = await userResponse.json();
+            if (updatedUser) {
+              setDbUser(updatedUser);
+              setLoading(false);
+            }
+          } else {
+            setLoading(false);
+            console.log("Subscription failed");
+            throw new Error("Failed to cancel subscription");
+          }
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.error(error);
+        });
+    }
+  };
+
   return (
     <section className="bg-white dark:bg-gray-900 p-4 mx-auto max-w-screen-xl">
       {loading && <Loader />}
@@ -44,12 +84,12 @@ const Upgrade = () => {
           <h2 className="mb-4 text-4xl tracking-tight font-extrabold dark:text-white">
             Choose your plan.
           </h2>
-          <p className="mb-5 font-light  sm:text-xl dark:text-gray-400 flex flex-col">
+          <div className="mb-5 font-light  sm:text-xl dark:text-gray-400 flex flex-col">
             Unlock more career possibilities with Kickresume Premium.
             <div className="flex justify-around mt-3">
               <a href="#" className="flex justify-center items-center">
                 <svg
-                  className="h-9 hover:text-gray-900 dark:hover:text-white"
+                  className="h-9 text-orange-400 dark:hover:text-white"
                   viewBox="0 0 125 35"
                   fill="currentColor"
                   xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +103,7 @@ const Upgrade = () => {
               </a>
               <a href="#" className="flex justify-center items-center">
                 <svg
-                  className="h-9 hover:text-gray-900 dark:hover:text-white"
+                  className="h-9 text-red-600 dark:hover:text-white"
                   viewBox="0 0 86 29"
                   fill="currentColor"
                   xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +117,7 @@ const Upgrade = () => {
               </a>
               <a href="#" className="flex justify-center items-center">
                 <svg
-                  className="h-8 hover:text-gray-900 dark:hover:text-white"
+                  className="h-8 text-blue-400 dark:hover:text-white"
                   viewBox="0 0 151 34"
                   fill="currentColor"
                   xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +142,7 @@ const Upgrade = () => {
               </a>
               <a href="#" className="flex justify-center items-center">
                 <svg
-                  className="h-9 hover:text-gray-900 dark:hover:text-white"
+                  className="h-9 text-green-400 dark:hover:text-white"
                   viewBox="0 0 124 38"
                   fill="currentColor"
                   xmlns="http://www.w3.org/2000/svg"
@@ -115,7 +155,7 @@ const Upgrade = () => {
               </a>
               <a href="#" className="flex justify-center items-center">
                 <svg
-                  className="h-9 hover:text-gray-900 dark:hover:text-white"
+                  className="h-9 text-yellow-400 dark:hover:text-white"
                   viewBox="0 0 137 37"
                   fill="currentColor"
                   xmlns="http://www.w3.org/2000/svg"
@@ -196,7 +236,7 @@ const Upgrade = () => {
               </a>
               <a href="#" className="flex justify-center items-center">
                 <svg
-                  className="h-6 hover:text-gray-900 dark:hover:text-white"
+                  className="h-6 text-gray-500 dark:hover:text-white"
                   viewBox="0 0 124 21"
                   fill="currentColor"
                   xmlns="http://www.w3.org/2000/svg"
@@ -244,7 +284,7 @@ const Upgrade = () => {
                 </svg>
               </a>
             </div>
-          </p>
+          </div>
         </div>
         <div className="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
           {pricingOptions.map((option, index) => (
@@ -252,6 +292,7 @@ const Upgrade = () => {
               key={index}
               {...option}
               plan={dbUser?.paymentPlan as unknown as string}
+              handleCancel={handleCancel}
             />
           ))}
         </div>

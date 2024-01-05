@@ -49,7 +49,7 @@ const Templates = () => {
     if (
       dbUser &&
       (template.variant === `${dbUser.paymentPlan}`.toLowerCase() ||
-        template.variant === "basic")
+        template.variant === "free")
     ) {
       router.push(`/createResume/${template.name.toLowerCase()}/${v4()}`);
     } else {
@@ -67,7 +67,7 @@ const Templates = () => {
             <div key={index}>
               <div
                 key={index}
-                className="border rounded-lg overflow-hidden hover:shadow-lg relative group"
+                className="border rounded-lg overflow-hidden shadow-md shadow-gray-500 relative group"
                 style={{ height: "400px", width: "300px" }}
               >
                 <div className="absolute inset-0 overflow-hidden group-hover:brightness-50">

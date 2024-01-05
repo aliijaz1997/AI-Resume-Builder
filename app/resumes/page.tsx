@@ -10,6 +10,8 @@ import Modern from "../../components/Template/components/Types/modern";
 import Classic from "../../components/Template/components/Types/classic";
 import { dummyResumeLists } from "../../components/Template/DummyData/mockResumeData";
 import Stylish from "../../components/Template/components/Types/dark";
+import ResumeDropDown from "../../components/Resumes/dropdown";
+import CardComponent from "../../components/Resumes/cards";
 
 export default function Resumes() {
   const { data: user } = useSession();
@@ -69,119 +71,143 @@ export default function Resumes() {
   }, [user]);
 
   const openModal = (resume: FormValues) => {
-    setSelectedResume(resume); // Store the selected resume
-    setIsModalOpen(true); // Open the modal
+    setSelectedResume(resume);
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setSelectedResume(null); // Clear selected resume when closing modal
-    setIsModalOpen(false); // Close the modal
+    setSelectedResume(null);
+    setIsModalOpen(false);
   };
-  // if (isLoading) return <Loader />;
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-6 gap-2 bg-white justify-evenly">
-      {resumeList.map((resume: FormValues) => (
-        <div
-          key={resume.id}
-          className="flex flex-col justify-center p-2 rounded-lg m-2 shadow-xl border-2 shadow-slate-600"
-        >
-          <PDFViewer
-            height={287}
-            width={200}
-            showToolbar={false}
-            className="border rounded"
+    <div className="p-4 max-w-screen-xl mx-auto">
+      {isLoading && <Loader />}
+      <div className="flex items-center mt-6 mb-8">
+        <span className="border-gray-300 border-2 rounded-full p-1 mr-4">
+          <img
+            className="w-16 h-16 rounded-full"
+            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+            alt="user photo"
+          />
+        </span>
+        <p className="font-semibold text-2xl">
+          Welcome back, {user?.user?.name}!
+        </p>
+      </div>
+      <div>
+        <CardComponent />
+      </div>
+      <div className="bg-gray-100 p-8 mb-4 rounded-2xl">
+        <p className="font-semibold text-2xl mb-8">Your Documents</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div
+            className="flex flex-col items-center justify-center rounded-md  border-dotted border-red-500 border-2"
+            style={{ height: "400px", width: "300px" }}
           >
-            {renderPdfContent({
-              type: resume.type ? resume.type : "simple",
-              values: resume,
-            })}
-          </PDFViewer>
-          <div className="flex justify-between mt-2">
-            <button
-              onClick={() => {
-                router.push(`/createResume/${resume.type}/${resume.id}`);
-              }}
-              className="text-white bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => openModal(resume)} // Pass the selected resume to open modal
-              className="text-white bg-gradient-to-r from-gray-400 via-gray-500 to-gray-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-            >
-              Preview
-            </button>
+            <p className="text-red-500 text-center hover:bg-red-200 border-red-500 border p-2 mb-2">
+              <button className="hover:text-lg">Create New Resume</button>
+            </p>
+            <p className="text-red-500 text-center border-red-500 hover:bg-red-200 border p-2 mt-2 mb-2">
+              <button className="hover:text-lg">New Resume with AI</button>
+            </p>
+            <p className="text-red-500 text-center border-red-500 hover:bg-red-200 border p-2 mt-2">
+              <button className="hover:text-lg">Use Example</button>
+            </p>
           </div>
-          {selectedResume && ( // Render modal only when a resume is selected
+
+          {resumeList.map((resume: FormValues) => (
             <div
-              id="default-modal"
-              aria-hidden={!isModalOpen}
-              className={`fixed top-0 right-0 left-0 z-50 flex justify-center items-center  bg-gray-800 bg-opacity-50 ${
-                isModalOpen ? "" : "hidden"
-              }`}
+              key={resume.id}
+              className="flex flex-col justify-center bg-white rounded-md"
+              style={{ height: "400px", width: "300px" }}
             >
-              <div className="relative p-4 w-full max-w-2xl">
-                <div className="relative bg-white rounded-lg shadow">
-                  <div className="flex items-center justify-between p-4 border-b rounded-t">
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      Resume Preview
-                    </h3>
-                    <div className="flex text-center justify-center">
-                      <PDFDownloadLink
-                        style={{
-                          margin: "2px",
-                          backgroundColor: "#3C81F7",
-                          borderRadius: "1rem",
-                          padding: "7px 6px 6px",
-                          color: "white",
-                          fontSize: "13px",
-                        }}
-                        document={renderPdfContent({
-                          type: selectedResume.type
-                            ? selectedResume.type
-                            : "simple",
-                          values: selectedResume,
-                        })}
-                        fileName="resume.pdf"
-                      >
-                        {({ blob, url, loading, error }) =>
-                          loading ? "Loading document..." : "Download"
-                        }
-                      </PDFDownloadLink>
-                      <button
-                        onClick={closeModal}
-                        type="button"
-                        className="text-gray-800 bg-gray-200 hover:bg-gray-300 hover:text-gray-900 rounded-full text-sm w-20 h-8 px-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
-                      >
-                        Close
-                      </button>
+              <PDFViewer
+                height={400}
+                width={300}
+                showToolbar={false}
+                className="border rounded"
+              >
+                {renderPdfContent({
+                  type: resume.type ? resume.type : "simple",
+                  values: resume,
+                })}
+              </PDFViewer>
+              <div className="flex justify-between m-2 items-center">
+                <p>{resume.name}</p>
+                <ResumeDropDown />
+              </div>
+              {selectedResume && ( // Render modal only when a resume is selected
+                <div
+                  id="default-modal"
+                  aria-hidden={!isModalOpen}
+                  className={`fixed top-0 right-0 left-0 z-50 flex justify-center items-center  bg-gray-800 bg-opacity-50 ${
+                    isModalOpen ? "" : "hidden"
+                  }`}
+                >
+                  <div className="relative p-4 w-full max-w-2xl">
+                    <div className="relative bg-white rounded-lg shadow">
+                      <div className="flex items-center justify-between p-4 border-b rounded-t">
+                        <h3 className="text-xl font-semibold text-gray-900">
+                          Resume Preview
+                        </h3>
+                        <div className="flex text-center justify-center">
+                          <PDFDownloadLink
+                            style={{
+                              margin: "2px",
+                              backgroundColor: "#3C81F7",
+                              borderRadius: "1rem",
+                              padding: "7px 6px 6px",
+                              color: "white",
+                              fontSize: "13px",
+                            }}
+                            document={renderPdfContent({
+                              type: selectedResume.type
+                                ? selectedResume.type
+                                : "simple",
+                              values: selectedResume,
+                            })}
+                            fileName="resume.pdf"
+                          >
+                            {({ blob, url, loading, error }) =>
+                              loading ? "Loading document..." : "Download"
+                            }
+                          </PDFDownloadLink>
+                          <button
+                            onClick={closeModal}
+                            type="button"
+                            className="text-gray-800 bg-gray-200 hover:bg-gray-300 hover:text-gray-900 rounded-full text-sm w-20 h-8 px-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <PDFViewer
+                          height={600}
+                          width={600}
+                          showToolbar={false}
+                          className="border rounded"
+                        >
+                          <Document>
+                            {selectedResume.type === "modern" ? (
+                              <Modern values={selectedResume} />
+                            ) : selectedResume.type === "classic" ? (
+                              <Classic values={selectedResume} />
+                            ) : (
+                              <Simple values={selectedResume} />
+                            )}
+                          </Document>
+                        </PDFViewer>
+                      </div>
                     </div>
                   </div>
-                  <div className="p-4">
-                    <PDFViewer
-                      height={600}
-                      width={600}
-                      showToolbar={false}
-                      className="border rounded"
-                    >
-                      <Document>
-                        {selectedResume.type === "modern" ? (
-                          <Modern values={selectedResume} />
-                        ) : selectedResume.type === "classic" ? (
-                          <Classic values={selectedResume} />
-                        ) : (
-                          <Simple values={selectedResume} />
-                        )}
-                      </Document>
-                    </PDFViewer>
-                  </div>
                 </div>
-              </div>
+              )}
             </div>
-          )}
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 }

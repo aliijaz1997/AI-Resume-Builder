@@ -22,17 +22,17 @@ export default function AppHeader() {
 
   return (
     <nav className="bg-white border-gray-200 border-b dark:bg-gray-900 mb-2">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto pr-4 pl-4">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto pr-4 pl-4 pt-3 pb-3">
         <a
           href="https://flowbite.com/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <img
             src="https://www.codester.com/static/uploads/items/000/041/41164/icon.png"
-            className="h-16"
+            className="h-8"
             alt="Flowbite Logo"
           />
-          <span className="self-center text-2xl font-extrabold whitespace-nowrap dark:text-white">
+          <span className="self-center text-xl font-extrabold whitespace-nowrap dark:text-white">
             Resume Builder
           </span>
         </a>

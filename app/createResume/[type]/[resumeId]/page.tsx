@@ -94,7 +94,7 @@ export default function Resume({
 
   if (isLoading) return <Loader />;
   return (
-    <div className="flex justify-center lg:flex-row flex-col bg-white">
+    <div className="p-4 max-w-screen-xl mx-auto flex flex-col lg:flex-row">
       <CreateResumeForm
         values={formik.values}
         setFieldValue={formik.setFieldValue}
