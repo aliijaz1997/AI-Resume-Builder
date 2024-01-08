@@ -51,7 +51,6 @@ const Upgrade = () => {
       })
         .then(async (res) => {
           if (res.status === 200) {
-            console.log("Success fully cancel subscription");
             const userResponse = await fetch(`/api/user/${user.user?.email}`, {
               method: "GET",
               headers: {
@@ -65,7 +64,6 @@ const Upgrade = () => {
             }
           } else {
             setLoading(false);
-            console.log("Subscription failed");
             throw new Error("Failed to cancel subscription");
           }
         })
